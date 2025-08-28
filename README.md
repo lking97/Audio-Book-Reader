@@ -54,30 +54,6 @@ pip install pyttsx3 PyPDF2
 
 ---
 
-## The script
-```python
-import pyttsx3                          # offline text-to-speech library
-import PyPDF2                           # PDF parser/reader library
-from tkinter.filedialog import *        # pulls file-dialog helpers into global namespace
-
-book = askopenfilename(title="Select a PDF", filetypes=[("PDF files", "*.pdf")])   # returns the chosen file path as a string
-if not book:
-    raise SystemExit("No file selected.")
-
-reader = PyPDF2.PdfReader(book)      # PDF reader object for the selected file
-engine = pyttsx3.init()
-
-for i in range(len(reader.pages)):
-    page = reader.pages[i]
-    text = page.extract_text() or ""
-    if text.strip():
-        engine.say(text)
-
-engine.runAndWait()
-```
-
----
-
 ## Optional configuration
 You can tweak voice, rate, and volume:
 ```python
@@ -100,41 +76,11 @@ for i in range(start, min(end, len(reader.pages))):
 
 ---
 
-## Troubleshooting
-- **Nothing is read / no sound**
-  - Check system volume and audio output device.
-  - On Linux, ensure `espeak-ng` / `speech-dispatcher` is installed.
-- **Some pages are skipped**
-  - Image‑only/scanned PDFs don’t contain extractable text. Use OCR (e.g., `pytesseract`) to convert images to text before TTS.
-- **Weird characters or layout**
-  - Text extraction depends on how the PDF encodes text. Results may vary across PDFs.
-- **App quits immediately**
-  - You likely canceled the file dialog—this is by design.
-
----
-
-## Known limitations
-- No OCR built‑in; scanned PDFs won’t be read without preprocessing.
-- No UI controls (pause/stop/seek, page range input) in this minimal script.
-- Depends on OS TTS voices; available voices vary by platform.
-
----
-
 ## Roadmap (nice‑to‑haves)
 - GUI with play/pause, page navigation, progress.
 - Page range & chunking long pages for smoother delivery.
 - OCR pipeline for scanned PDFs.
 - Export to audio file (e.g., WAV/MP3) using pyttsx3’s `save_to_file`.
-
----
-
-## Security note
-Avoid opening untrusted PDFs—malformed files can crash or hang parsers. Consider validating inputs or sandboxing if needed.
-
----
-
-## License
-Add a license of your choice (e.g., MIT) to clarify reuse.
 
 ---
 
